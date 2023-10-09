@@ -4,7 +4,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-	height: 100vh;
+	margin: 0;
+    padding: 0;
+	/* height: 100vh; */
 	margin: -20px 0 50px;
 }
 
@@ -18,10 +20,9 @@ body {
 nav{
 	position: fixed;
 	top: 0;
-	z-index: 99;
+	z-index: 10;
 	width: 100%;
-	
-	background: transparent;
+	background-color: #7fb3ff;
   }
   nav .wrapper{
 	position: relative;
@@ -215,6 +216,7 @@ nav{
 	top: 0;
 	left: 0;
 	object-fit: cover;
+	z-index: 999;
 }
 
 /*Boton*/
@@ -224,7 +226,7 @@ nav{
 	display: block;
 	width: 150px;
 	top: 35px;
-	left: 1107px;
+	left: 1000px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: 700;
 	border-radius: 43px;
@@ -247,4 +249,23 @@ nav{
 	background-color: #5171a8;
 	color: #ecf0f5;
   }
-	
+
+/*Imagenes*/
+  .imagen {
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+  	width: 80%;
+	border-radius: 15px;
+  }
+
+/*Cuerpo*/
+	.cuerpo {
+		display: block;
+  		margin-left: auto;
+  		margin-right: auto;
+		margin-top: 90px;
+		width: 85%;
+		padding-top: 20vh;
+		padding: 5% 5%;
+	}
