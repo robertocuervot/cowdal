@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Vertical Tabs</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+            rel="stylesheet"
+            type='text/css'
+        >
+        <link rel="stylesheet" type="text/css" href="./style.css">
+    </head>
+    <body>
+         <!--  Logotipo -->
+    <div class="logo"><img class="log" src="./img/logo.png" /></div>
+    <!--  Menu -->
+
+    <nav>
+        <div class="wrapper">
+          <input type="radio" name="slider" id="menu-btn">
+          <input type="radio" name="slider" id="close-btn">
+          <ul class="nav-links">
+            <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+            <li><a href="./index.html">Inicio</a></li>
+            <li>
+              <a class="desktop-item">Producto</a>
+              <input type="checkbox" id="showDrop">
+              <label for="showDrop" class="mobile-item">Producto</label>
+              <ul class="drop-menu">
+                <li><a href="./stepbystep/stepbystep.html">Paso a paso</a></li>
+                <li><a href="./components/components.html">Componentes</a></li>
+                <li><a href="#">Sistema</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+          <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+          <div class="prueba" target="_blank"><a class="link-sin-estilo" href="./signinup/signinup.html">INGRESAR</a></div>
+        </div>
+      </nav>
+    <!-- Como funciona-->
+
+       
+        <script src="./script.js"></script>
+    </body>
+</html>
