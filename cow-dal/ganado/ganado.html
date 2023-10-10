@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Vacas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="./styleganado.css">
+</head>
+<body>
+
+
+    <!--  Logotipo -->
+    <div class="logo"><img class="log" src="../img/logo.png" /></div>
+    <!--  Menu -->
+
+    <nav>
+        <div class="wrapper">
+          <input type="radio" name="slider" id="menu-btn">
+          <input type="radio" name="slider" id="close-btn">
+          <ul class="nav-links">
+            <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+            <li><a href="./ganado.html">Ganado</a></li>
+            
+            <li><a href="#">Dashboard</a></li>
+          </ul>
+          <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+          <div class="prueba" target="_blank"><a id="cerrarSesionBtn" class="link-sin-estilo" href="../index.html"">SALIR</a></div>
+        </div>
+      </nav>
+
+    
+    <!-- Formulario para agregar una nueva vaca -->
+    <br>
+    <br>
+    <br>
+    <form id="addCowForm" class="horizontal-form">
+        <div class="form-group">
+            <label for="id">N Serie*:</label>
+            <input type="text" id="id" required>
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre*:</label>
+            <input type="text" id="nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="padre">Padre:</label>
+            <input type="text" id="padre">
+        </div>
+        <div class="form-group">
+            <label for="madre">Madre:</label>
+            <input type="text" id="madre">
+        </div>
+        <div class="form-group">
+            <label for="raza">Raza*:</label>
+            <input type="text" id="raza" required>
+        </div>
+        <button type="submit" class="round-button">
+            <i class="fas fa-plus"></i>
+        </button>
+    </form>
+    <br>
+    <br>
+    <br>
+    
+    <!-- Tabla para mostrar las vacas existentes -->
+    <div class="container">
+        <table id="cowTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Padre</th>
+                    <th>Madre</th>
+                    <th>Raza</th>
+                    <th>Producción promedio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenará la tabla con datos de Firebase -->
+            </tbody>
+        </table>
+    </div>
+    <script src="./scriptganado.js"></script>
+</body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCa5cUxigr4rnuI2ioLT-JM8XJfGgMXi4E",
+      authDomain: "cow-dal.firebaseapp.com",
+      projectId: "cow-dal",
+      storageBucket: "cow-dal.appspot.com",
+      messagingSenderId: "423462149072",
+      appId: "1:423462149072:web:b16387deed81f3f56d77d5",
+      measurementId: "G-MQY9JG58X1"
+    };
+  
+     // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    //get ref to database services
+    const db = getDatabase(app);
+
+    //set cow
+    const addCowForm = document.getElementById("addCowForm");
+    addCowForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        auth.onAuthStateChanged((user) => {
+            // Obtén el correo electrónico del usuario
+            const email = user.email;
+            const uid = user.uid;
+            set(ref(db, 'granja/' + uid+ '/vacas/' + document.getElementById("id").value),
+            {
+                nombre : document.getElementById("nombre").value,
+                padre : document.getElementById("padre").value,
+                madre : document.getElementById("madre").value,
+                raza : document.getElementById("raza").value,
+                promedio: 0
+            });
+
+            alert("Vaca agregada con exito");
+            window.location.reload();
+        });
+        
+    });
+    
+
+    auth.onAuthStateChanged((user) => {
+        // Obtén el correo electrónico del usuario
+        const email = user.email;
+        const uid = user.uid;
+
+        const tablaVacas = document.getElementById("cowTable");
+        get(ref(db, 'granja/' + uid+ '/vacas')).then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const vaca = data[key];
+                        const fila = document.createElement("tr");
+                        fila.innerHTML = `
+                            <td>${vaca.nombre}</td>
+                            <td>${vaca.padre}</td>
+                            <td>${vaca.madre}</td>
+                            <td>${vaca.raza}</td>
+                            <td>${vaca.promedio}</td>
+                        `;
+                        tablaVacas.appendChild(fila);
+                    }
+                }
+            } else {
+                console.log("No data available");
+            }
+            }).catch((error) => {
+                console.error(error);
+        });          
+            
+    });
+
+    //----- Logout code start
+    
+    document.getElementById("cerrarSesionBtn").addEventListener("click", function() {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log('Sign-out successful.');
+            alert('Sign-out successful.');
+            document.getElementById('logout').style.display = 'none';
+        }).catch((error) => {
+            // An error happened.
+            console.log('An error happened.');
+        });		  		  
+    });
+	//----- End
+
+
+</script>
+</html>

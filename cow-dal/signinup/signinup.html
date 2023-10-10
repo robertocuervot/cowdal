@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen -  Login Form | Nothing4us </title>
+  <link rel="stylesheet" href="./stylesigninup.css">
+
+</head>
+<body>
+    <!--  Logotipo -->
+    <div class="logo"><img class="log" src="../img/logo.png" /></div>
+    <!--  Menu -->
+
+    <nav>
+        <div class="wrapper">
+          <input type="radio" name="slider" id="menu-btn">
+          <input type="radio" name="slider" id="close-btn">
+          <ul class="nav-links">
+            <label for="close-btn" class="btn close-btn"><i class="fas fa-times"></i></label>
+            <li><a href="../index.html">Inicio</a></li>
+            <li>
+              <a href="#" class="desktop-item">Producto</a>
+              <input type="checkbox" id="showDrop">
+              <label for="showDrop" class="mobile-item">Producto</label>
+              <ul class="drop-menu">
+                <li><a href="../stepbystep/stepbystep.html">Paso a paso</a></li>
+                <li><a href="../components/components.html"">Componentes</a></li>
+                <li><a href="#">Sistema</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+          <label for="menu-btn" class="btn menu-btn"><i class="fas fa-bars"></i></label>
+          <div class="prueba" target="_blank"><a class="link-sin-estilo" href="../signinup/signinup.html">INGRESAR</a></div>
+        </div>
+      </nav>
+
+
+    <!--  Formulario -->
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form id="registro-form" action="#">
+                <h1>Cree una Cuenta</h1>
+                <span>Utilice su email para registrarse</span>
+                <input type="text" id="nombre" placeholder="Nombre de la granja o empresa" />
+                <input type="email" id="correo" placeholder="Correo" />
+                <input type="password" id="contrasena" placeholder="Contraseña" />
+                <button id="registrar-btn">Registrarse</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form id="ingreso-form" action="#">
+                <h1>INGRESAR</h1>
+                <span>Use su cuenta</span>
+                <input type="email" id="correo-ingreso" placeholder="Correo" />
+                <input type="password" id="contrasena-ingreso" placeholder="Contraseña" />
+                <a href="#">¿Olvidó su contraseña?</a>
+                <button id="ingresar-btn">INGRESAR</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Bienvenido de Vuelta!</h1>
+                    <p>Para mantenerse conectado, por favor ingrese con su información personal</p>
+                    <button class="ghost" id="signIn">Ingresar</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Buenas sumercé!</h1>
+                    <p>Ingrese sus datos y empiece a optimizar su producción con nosotros.</p>
+                    <button class="ghost" id="signUp">REGISTRARSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<!-- partial -->
+
+<script  src="./scriptsigninup.js"></script>
+
+</body>
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCa5cUxigr4rnuI2ioLT-JM8XJfGgMXi4E",
+      authDomain: "cow-dal.firebaseapp.com",
+      projectId: "cow-dal",
+      storageBucket: "cow-dal.appspot.com",
+      messagingSenderId: "423462149072",
+      appId: "1:423462149072:web:b16387deed81f3f56d77d5",
+      measurementId: "G-MQY9JG58X1"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    console.log(app);
+
+    //get ref to database services
+    const db = getDatabase(app);
+
+     //----- New Registration code start	  
+	  document.getElementById("registrar-btn").addEventListener("click", function(e) {
+		  var email =  document.getElementById("correo").value;
+		  var password = document.getElementById("contrasena").value;
+		  //For new registration
+		  createUserWithEmailAndPassword(auth, email, password)
+		  .then((userCredential) => {
+		    // Signed in 
+		    const user = userCredential.user;
+		    console.log(user);
+		    alert("Registration successfully!!");
+            window.location.reload();
+		    // ...
+		  })
+		  .catch((error) => {
+		    const errorCode = error.code;
+		    const errorMessage = error.message;
+		    // ..
+		    console.log(errorMessage);
+		    alert(error);
+		  });
+          e.preventDefault();
+          set(ref(db, 'nombres/' + document.getElementById("nombre").value),
+          {
+            email: document.getElementById("correo").value,
+            name: document.getElementById("nombre").value
+
+          });
+          
+          +
+	  });
+	  //----- End
+
+	  //----- Login code start	  
+	  document.getElementById("ingresar-btn").addEventListener("click", function() {
+		  var email =  document.getElementById("correo-ingreso").value;
+		  var password = document.getElementById("contrasena-ingreso").value;
+
+		  signInWithEmailAndPassword(auth, email, password)
+		  .then((userCredential) => {
+		    // Signed in 
+		    const user = userCredential.user;
+		    console.log(user);
+		    alert(user.email+" Login successfully!!!");
+            window.location.href = "../ganado/ganado.html";
+		    document.getElementById('logout').style.display = 'block';
+		    // ...
+		  })
+		  .catch((error) => {
+		    const errorCode = error.code;
+		    const errorMessage = error.message;
+		    console.log(errorMessage);
+		    alert(errorMessage);
+		  });		  		  
+	  });
+	  //----- End
+
+
+	  //----- End
+  </script>
+</html>
